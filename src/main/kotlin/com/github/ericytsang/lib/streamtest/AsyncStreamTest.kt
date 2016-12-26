@@ -15,7 +15,7 @@ import kotlin.concurrent.thread
 /**
  * Created by surpl on 10/29/2016.
  */
-abstract class AsyncSimplePipeStreamTest
+abstract class AsyncStreamTest
 {
     protected abstract val src:OutputStream
     protected abstract val sink:InputStream

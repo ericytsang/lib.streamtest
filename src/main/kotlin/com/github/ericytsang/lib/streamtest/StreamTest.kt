@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
 /**
  * Created by surpl on 10/29/2016.
  */
-abstract class SimplePipeStreamTest
+abstract class StreamTest
 {
     protected abstract val src:OutputStream
     protected abstract val sink:InputStream

@@ -24,6 +24,7 @@ abstract class StreamTest
         val written = byteArrayOf(0,2,5,6)
         val read = byteArrayOf(0,0,0,0)
         src.write(written)
+        src.close()
         DataInputStream(sink).readFully(read)
         assert(Arrays.equals(written,read))
     }
@@ -32,6 +33,7 @@ abstract class StreamTest
     fun pipeNegativeNumber()
     {
         src.write(-1)
+        src.close()
         assert(sink.read() == 0xFF)
     }
 
@@ -41,6 +43,7 @@ abstract class StreamTest
         DataOutputStream(src).writeShort(0)
         DataOutputStream(src).writeShort(1)
         DataOutputStream(src).writeShort(-1)
+        src.close()
         assert(DataInputStream(sink).readShort() == 0.toShort())
         assert(DataInputStream(sink).readShort() == 1.toShort())
         assert(DataInputStream(sink).readShort() == (-1).toShort())
@@ -50,6 +53,7 @@ abstract class StreamTest
     fun pipeStringObjects()
     {
         ObjectOutputStream(src).writeObject("hello!!!")
+        src.close()
         assert(ObjectInputStream(sink).readObject() == "hello!!!")
     }
 
@@ -57,6 +61,7 @@ abstract class StreamTest
     fun pipeMultiFieldObjects()
     {
         ObjectOutputStream(src).writeObject(RuntimeException("blehh"))
+        src.close()
         ObjectInputStream(sink).readObject()
     }
 
@@ -66,6 +71,7 @@ abstract class StreamTest
         thread {
             Thread.sleep(100)
             src.write(234)
+            src.close()
         }
         assert(sink.read() == 234)
     }
@@ -76,6 +82,7 @@ abstract class StreamTest
         thread {
             Thread.sleep(100)
             ObjectOutputStream(src).writeObject(RuntimeException("blehh"))
+            src.close()
         }
         ObjectInputStream(sink).readObject()
     }

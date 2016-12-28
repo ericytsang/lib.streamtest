@@ -34,7 +34,10 @@ abstract class AsyncStreamTest
     {
         val written = byteArrayOf(0,2,5,6)
         val read = byteArrayOf(0,0,0,0)
-        ts += thread {src.write(written)}
+        ts += thread {
+            src.write(written)
+            src.close()
+        }
         ts += thread {DataInputStream(sink).readFully(read)}
         ts.forEach {it.join()}
         assert(Arrays.equals(written,read))
@@ -47,6 +50,7 @@ abstract class AsyncStreamTest
             try
             {
                 src.write(-1)
+                src.close()
             }
             catch (ex:Exception)
             {
@@ -75,6 +79,7 @@ abstract class AsyncStreamTest
                 DataOutputStream(src).writeShort(0)
                 DataOutputStream(src).writeShort(1)
                 DataOutputStream(src).writeShort(-1)
+                src.close()
             }
             catch (ex:Exception)
             {
@@ -102,7 +107,7 @@ abstract class AsyncStreamTest
         ts += thread {
             try
             {
-                ObjectOutputStream(src).writeObject("hello!!!")
+                ObjectOutputStream(src).use {it.writeObject("hello!!!")}
             }
             catch (ex:Exception)
             {
@@ -128,7 +133,7 @@ abstract class AsyncStreamTest
         ts += thread {
             try
             {
-                ObjectOutputStream(src).writeObject(RuntimeException("blehh"))
+                ObjectOutputStream(src).use {it.writeObject(RuntimeException("blehh"))}
             }
             catch (ex:Exception)
             {
